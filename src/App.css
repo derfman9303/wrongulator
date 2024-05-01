@@ -24,8 +24,13 @@
   color: #61dafb;
 }
 
-h1, h2 {
+h1 {
     color: white;
+}
+
+h2 {
+    color: white;
+    margin-bottom: 3em;
 }
 
 #calculator {

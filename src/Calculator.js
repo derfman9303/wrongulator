@@ -8,22 +8,18 @@ function Calculator() {
     const [operator, setOperator] = useState(null);
 
     function add(e) {
-        e.preventDefault();
-        setResult((result) => result + modifier);
+        setResult((result) => Number(result) + Number(modifier));
     }
 
     function subtract(e) {
-        e.preventDefault();
         setResult((result) => result - modifier);
     }
 
     function multiply(e) {
-        e.preventDefault();
         setResult((result) => result * modifier);
     }
 
     function divide(e) {
-        e.preventDefault();
         setResult((result) => result / modifier);
     }
 
@@ -33,21 +29,21 @@ function Calculator() {
         setModifier(0);
     }
 
-    function performOperation(e) {
+    function performOperation() {
         setModifier(Number(modifier));
 
         switch (operator) {
             case 'add':
-                add(e);
+                add();
                 break;
             case 'subtract':
-                subtract(e);
+                subtract();
                 break;
             case 'multiply':
-                multiply(e);
+                multiply();
                 break;
             case 'divide':
-                divide(e);
+                divide();
                 break;
             default:
                 if (!!modifier) {
@@ -68,7 +64,7 @@ function Calculator() {
     function clickOperator(op, e) {
         // If there is any math to be done, otherwise do nothing
         if (!!modifier || !!result) {
-            performOperation(e);
+            performOperation();
         }
 
         setOperator(op);
@@ -83,12 +79,40 @@ function Calculator() {
         }
     }
 
+    function changeSign(e) {
+        e.preventDefault();
+        setModifier(-modifier);
+    }
+
+    function finishOperation(e) {
+        e.preventDefault();
+
+        performOperation();
+
+        wrongulate();
+    }
+
+    function wrongulate() {
+        let randomOperator = Math.random();
+        let randomNumber = Math.floor(Math.random() * 10) + 1;
+
+        if (randomOperator <= 0.25) {
+            setResult(result + randomNumber);
+        } else if (randomOperator <= 0.5) {
+            setResult(result - randomNumber);
+        } else if (randomOperator <= 0.75) {
+            setResult(result * randomNumber);
+        } else {
+            setResult(result / randomNumber);
+        }
+    }
+
     return (
         <div id="calculator">
             <p id="result">{ !!modifier ? modifier : result }</p>
             <div className="button-row">
                 <button onClick={reset}>AC</button>
-                <button>±</button>
+                <button onClick={changeSign}>±</button>
                 <button>%</button>
                 <button onClick={(e) => clickOperator('divide', e)}>÷</button>
             </div>
@@ -113,7 +137,7 @@ function Calculator() {
             <div className="button-row">
                 <button id="zero" onClick={(e) => clickNumber(0, e)}>0</button>
                 <button onClick={(e) => clickDot(e)}>.</button>
-                <button onClick={performOperation}>=</button>
+                <button onClick={finishOperation}>=</button>
             </div>
         </div>
     );
